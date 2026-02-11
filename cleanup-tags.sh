@@ -148,9 +148,8 @@ if ! $APPLY; then
 fi
 
 for tag in "${TO_DELETE[@]}"; do
-  echo "git tag -d $tag"
-  # git tag -d "$tag"
-  # git push "$REMOTE" ":refs/tags/$tag"
+   git tag -d "$tag"
+   git push "$REMOTE" ":refs/tags/$tag"
 done
 
 echo "Done"
