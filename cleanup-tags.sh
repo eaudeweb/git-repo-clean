@@ -56,6 +56,13 @@ git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
 
 git fetch --tags --prune "$REMOTE"
 
+echo "Configuration:"
+echo "Remote: $REMOTE"
+echo "Keep count: $KEEP_COUNT"
+echo "Months threshold: $MONTHS"
+echo "Mode: $([[ $APPLY = true ]] && echo APPLY || echo DRY-RUN)"
+echo
+
 ALL_TAGS=$(git tag || true)
 
 VALID_TAGS=$(echo "$ALL_TAGS" | grep -E "$TAG_REGEX" || true)
