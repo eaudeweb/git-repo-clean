@@ -1,0 +1,49 @@
+name: 'Cleanup Git tags'
+description: 'Clean up old git tags based on retention and age policy'
+
+inputs:
+  keep:
+    description: 'Number of latest tags to keep'
+    required: false
+    default: '50'
+
+  months:
+    description: 'Do not delete tags newer than this number of months'
+    required: false
+    default: '6'
+
+  apply:
+    description: 'Perform deletion (false = dry run)'
+    required: false
+    default: 'false'
+
+  remote:
+    description: 'Git remote name'
+    required: false
+    default: 'origin'
+
+runs:
+  using: composite
+  steps:
+    - name: Configure git identity
+      shell: bash
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+    - name: Run tag cleanup
+      shell: bash
+      env:
+        REMOTE: ${{ inputs.remote }}
+      run: |
+        chmod +x "${{ github.action_path }}/cleanup-tags.sh"
+
+        APPLY_FLAG=""
+        if [ "${{ inputs.apply }}" = "true" ]; then
+          APPLY_FLAG="--apply"
+        fi
+
+        "${{ github.action_path }}/cleanup-tags.sh" \
+          --keep "${{ inputs.keep }}" \
+          --months "${{ inputs.months }}" \
+          $APPLY_FLAG
