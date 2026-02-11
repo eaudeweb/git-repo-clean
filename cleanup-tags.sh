@@ -22,6 +22,7 @@ KEEP_COUNT=50
 MONTHS=6
 TAG_REGEX='^[0-9]{4}$'
 APPLY=false
+REMOTE="${REMOTE:-origin}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -47,6 +48,13 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
+  echo "Not a git repository"
+  exit 1
+}
+
+git fetch --tags --prune "$REMOTE"
 
 ALL_TAGS=$(git tag || true)
 
@@ -133,8 +141,9 @@ if ! $APPLY; then
 fi
 
 for tag in "${TO_DELETE[@]}"; do
-  git tag -d "$tag"
-  git push origin ":refs/tags/$tag"
+  echo "git tag -d $tag"
+  # git tag -d "$tag"
+  # git push "$REMOTE" ":refs/tags/$tag"
 done
 
 echo "Done"
