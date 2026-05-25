@@ -1,5 +1,11 @@
 # git-repo-clean
 
+To prune your tags locally:
+```bash
+git fetch --tags --prune --prune-tags
+```
+
+
 `git-repo-clean` is a small set of Bash utilities for maintaining Git repositories by automatically cleaning up **obsolete tags** and **merged branches**.
 
 The repository currently contains two scripts:
